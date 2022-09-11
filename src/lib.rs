@@ -1,18 +1,27 @@
+mod scanner;
+mod token;
+
 use anyhow::Result;
+use std::fs;
 use std::io::{self, BufRead, Write};
 use std::path::PathBuf;
 
+use scanner::Scanner;
+
 pub fn run(input: String) -> Result<()> {
-    dbg!(input);
+    let scanner = Scanner::new(&input);
+
+    let tokens = scanner.get_tokens();
+
     Ok(())
 }
 
 pub fn run_file(file: PathBuf) -> Result<()> {
-    dbg!(file);
-    Ok(())
+    let source_code = fs::read_to_string(file).expect("Unable to read input file");
+    run(source_code)
 }
 
-pub fn run_prompt() -> io::Result<()> {
+pub fn run_prompt() -> Result<()> {
     let stdin = io::stdin();
     print!("> ");
     io::stdout().flush().unwrap();

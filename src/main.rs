@@ -4,6 +4,8 @@ use std::process;
 
 use anyhow::Result;
 
+
+
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
 
@@ -14,7 +16,6 @@ fn main() -> Result<()> {
         let file: PathBuf = PathBuf::from(&args[1]);
         loxrs::run_file(file)
     } else {
-        loxrs::run_prompt();
-        Ok(())
+        loxrs::run_prompt()
     }
 }
