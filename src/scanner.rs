@@ -6,8 +6,14 @@ pub struct Scanner {
 
 impl Scanner {
     pub fn new(source: &str) -> Scanner {
+
+
+
+
         Scanner { tokens: vec![] }
     }
+
+    
 
     pub fn get_tokens(&self) -> &Vec<Token> {
         &self.tokens
