@@ -10,9 +10,9 @@ use std::path::PathBuf;
 use scanner::Scanner;
 
 pub fn run(input: String) -> Result<()> {
-    let scanner = Scanner::new(&input);
+    let mut scanner = Scanner::new(&input);
 
-    let tokens = scanner.get_tokens();
+    let tokens = scanner.scan_tokens();
     dbg!("{tokens}"); 
 
     Ok(())
