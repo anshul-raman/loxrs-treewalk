@@ -1,3 +1,6 @@
+#![allow(dead_code)]
+
+use phf::phf_map;
 use std::fmt::Display;
 
 #[derive(Debug, Clone)]
@@ -26,7 +29,6 @@ impl Display for Token {
         }
     }
 }
-
 
 #[derive(Debug, Clone)]
 pub enum TokenType {
@@ -78,3 +80,25 @@ pub enum TokenType {
 
     EOF,
 }
+
+pub static KEYWORDS: phf::Map<&'static str, TokenType> = phf_map! {
+
+    "and" => TokenType::AND,
+    "class" => TokenType::CLASS,
+    "else" => TokenType::ELSE,
+    "false" => TokenType::FALSE,
+    "for" => TokenType::FOR,
+    "fun" => TokenType::FUN,
+    "if" => TokenType::IF,
+    "nil" => TokenType::NIL,
+    "or" => TokenType::OR,
+    "print" => TokenType::PRINT,
+    "return" => TokenType::RETURN,
+    "super" => TokenType::SUPER,
+    "this" => TokenType::THIS,
+    "true" => TokenType::TRUE,
+    "var" => TokenType::VAR,
+    "while" => TokenType::WHILE,
+
+
+};

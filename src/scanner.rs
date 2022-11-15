@@ -1,7 +1,9 @@
-use std::convert::TryInto;
+// use std::convert::TryInto;
 
+use crate::errors::error;
 use crate::token::Token;
 use crate::token::TokenType;
+use crate::token::KEYWORDS;
 
 pub struct Scanner {
     tokens: Vec<Token>,
@@ -77,8 +79,53 @@ impl Scanner {
             ' ' | '\r' | '\t' => (),
             '\n' => self.line += 1,
             '"' => self.string(),
-            c => () 
+            c => {
+                if c.is_digit(10) {
+                    self.number();
+                } else if c.is_alphabetic() {
+                    self.identifier();
+                } else {
+                    error(self.line, "Unexpected character.")
+                }
+            }
         }
+    }
+
+    fn identifier(&mut self) {
+        while self.peek().is_alphanumeric() || self.peek() == '_' {
+            self.advance();
+        }
+
+        let text = self
+            .source
+            .get(self.start..self.current)
+            .expect("Unexpected End");
+
+        let idn_token = KEYWORDS.get(text).cloned().unwrap_or(TokenType::IDENTIFIER);
+        self.add_token(idn_token);
+    }
+
+    fn number(&mut self) {
+        while self.peek().is_digit(10) {
+            self.advance();
+        }
+
+        if self.peek() == '.' && self.peek_next().is_digit(10) {
+            self.advance();
+        }
+
+        while self.peek().is_digit(10) {
+            self.advance();
+        }
+
+        let n: f64 = self
+            .source
+            .get(self.start..self.current)
+            .expect("Unexpected end")
+            .parse()
+            .expect("Scanned number could not be a number");
+
+        self.add_token(TokenType::NUMBER { literal: n })
     }
 
     fn string(&mut self) {
@@ -91,6 +138,7 @@ impl Scanner {
 
         if self.is_at_end() {
             // PANIC
+            error(self.line, "Invalid string");
             return;
         }
 
@@ -107,6 +155,13 @@ impl Scanner {
     }
 
     fn peek(&self) -> char {
+        match self.is_at_end() {
+            true => '\0',
+            false => self.chars_vec[self.current],
+        }
+    }
+
+    fn peek_next(&self) -> char {
         match self.is_at_end() {
             true => '\0',
             false => self.chars_vec[self.current],

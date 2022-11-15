@@ -1,6 +1,6 @@
+mod errors;
 mod scanner;
 mod token;
-mod errors;
 
 use anyhow::Result;
 use std::fs;
@@ -13,7 +13,7 @@ pub fn run(input: String) -> Result<()> {
     let mut scanner = Scanner::new(&input);
 
     let tokens = scanner.scan_tokens();
-    dbg!("{tokens}"); 
+    dbg!("{}", tokens);
 
     Ok(())
 }
